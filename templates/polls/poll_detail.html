@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+<style>
+    body {
+        background-image: url('{% static "img/bg3.jpg"%}');
+        background-size: auto;
+    }
+
+    .container {
+        font: 16px "Open Sans Condensed", Times, serif;
+        background-color: lightgray;
+        margin-top: 25px;
+        padding: 10px;
+        padding-top: 20px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.22);
+        width: 50%;
+    }
+
+    .container h2 {
+        background: #4D4D4D;
+        text-transform: uppercase;
+        font-family: 'Open Sans Condensed', sans-serif !important;
+        color: silver;
+        font-size: 24px;
+        font-weight: 100;
+        padding: 20px;
+        margin: -30px -30px 30px -30px;
+    }
+
+    .container h3{
+        font-size: 16px;
+    }
+
+    .login p {
+        background: #4D4D4D !important;
+        color: #797979 !important;
+        font-size: 18px !important;
+    }
+    .choice{
+        font-size: 20px;
+    }
+</style>
+<div class="container">
+    <!-- <h1>Polls details page</h1> -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <h2 class="mt-3 mb-3">{{ poll }}</h2>
+    <hr>
+    <form action="{% url 'polls:vote' poll.id %}" method="POST">
+        {% csrf_token %}
+        {% for choice in poll.choice_set.all %}
+        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+        <label for="choice{{ forloop.counter }}" class="choice">{{ choice.choice_text }}</label>
+        <br>
+        {% endfor %}
+        <input type="submit" value="Vote" class="btn btn-primary mt-3">
+        <a class="btn btn-warning mt-3" href="{% url 'polls:list' %}" role="button">Cancel</a>
+    </form>
+
+</div>
+
+{% endblock content %}
